@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="">
+  <ul>
+
+
+  {% for show in properties %}
+  <a href="{% url 'listing' show.id %}">
+
+<li>  <h1>{{show.seller}}</h1>
+<h1>{{show.title}}</h1>
+<h1>{{show.address}}</h1>
+<img src="{{show.photo_main.url}}">
+</li>
+<br><br>
+
+{% endfor %}
+</ul></a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<h1><a href="{% url 'dashboard' user.id %}"></a>{{property.seller}}</h1>
+<h1>{{property.title}}</h1>
+<h1>{{property.address}}</h1>
+<h1>{{property.city}}</h1>
+<h1>{{property.state}}</h1>
+<h1>{{property.zipcode}}</h1>
+<h1>{{property.description}}</h1>
+<h1>{{property.price}}</h1>
+<h1>{{property.bedrooms}}</h1>
+<h1>{{property.bathrooms}}</h1>
+<h1>{{property.bathrooms}}</h1>
+  <td><img src="{{property.photo_main.url}}"></td>
+
+
+{% endblock %}
