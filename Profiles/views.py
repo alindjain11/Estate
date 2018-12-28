@@ -26,7 +26,7 @@ def register(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             messages.success(request, 'user register succesfully')
-            return redirect('/Showall')
+            return redirect('/Properties/postproperty/')
     else:
         form = RegisterForm()
     return render(request,'accounts/register.html', {'form':form})

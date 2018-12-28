@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+					{% if user.is_seller %}
+					{% else %}
+					<div >
+						<h5>Do you have any enquiry?</h5>
+						<form method="post" action="{% url 'contact' %}">
+							{% csrf_token %}
+							<input type="hidden" placeholder="Property name" value="{{property.id}}" name="prop_id">
+							<input type="hidden" placeholder="Property name" value="{{user.id}}"  name="buyer_id">
+							<input type="hidden" placeholder="Property name" value="{{property.profile.id}}"  name="seller_id">
+							<input type="text" placeholder="Property name" value="{{property.name}}" name="property_name">
+							<input type="text" placeholder="Your name" value="{{user}}" name="user">
+							<input type="text" placeholder="Your email" value="{{user.email}}" name="email">
+							<input type="hidden" placeholder="Your email" value="{{property.profile.email}}" name="seller_email">
+							<input type="text" placeholder="Your number" value="{{user.phone_number}}" name="phone">
+							<textarea name="message" placeholder="Your question"></textarea>
+							<button>SEND ENQUIRY</button>
+						</form>
+					</div>
+					{% endif %}
+					{% else %}
+					<form method="post" action="{% url 'login' %}">
+					{% csrf_token %}
+					<button class="btn btn-info">MAKE ENQUIRE</button>
+					<form>
+					{% endif %}
+
+
+
+
+{% endblock %}

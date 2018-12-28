@@ -1,9 +1,9 @@
 from django.db import models
 from datetime import datetime
-from Seller.models import Seller
+from Profiles.models import Profile
 
 class Showall(models.Model):
-  seller = models.ForeignKey(Seller, on_delete=models.DO_NOTHING ,null=True, blank=True)
+  seller = models.ForeignKey(Profile, on_delete=models.DO_NOTHING ,null=True, blank=True)
   title = models.CharField(max_length=200)
   address = models.CharField(max_length=200)
   city = models.CharField(max_length=100)

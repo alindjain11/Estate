@@ -1,11 +1,13 @@
 from django.shortcuts import render
 
 from django.shortcuts import get_object_or_404, render
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-#from .choices import price_choices, bedroom_choices, state_choices
-
 from .models import Showall
 from .forms import PropertyForm
+from django.views.generic import CreateView,UpdateView
+from django.views.generic.edit import ModelFormMixin
+from .decorators import user_authenticate
+from django.utils.decorators import method_decorator
+
 
 def listings(request):
     properties = Showall.objects.all()
@@ -29,55 +31,26 @@ def listing(request, id):
     }
     return render(request,'properties/listing.html',context)
 
+@method_decorator(user_authenticate, name='dispatch')
+class postproperty(CreateView):
+    model = Showall
+    form_class = PropertyForm
+    template_name = 'properties/properties.html'
+    sucess_url = '/'
 
-# def search(request):
-#   queryset_list = Showall.objects.order_by('-list_date')
-#
-#   # Keywords
-#   if 'keywords' in request.GET:
-#     keywords = request.GET['keywords']
-#     if keywords:
-#       queryset_list = queryset_list.filter(description__icontains=keywords)
-#
-#   # City
-#   if 'city' in request.GET:
-#     city = request.GET['city']
-#     if city:
-#       queryset_list = queryset_list.filter(city__iexact=city)
-#
-#   # State
-#   if 'state' in request.GET:
-#     state = request.GET['state']
-#     if state:
-#       queryset_list = queryset_list.filter(state__iexact=state)
-#
-#   # Bedrooms
-#   if 'bedrooms' in request.GET:
-#     bedrooms = request.GET['bedrooms']
-#     if bedrooms:
-#       queryset_list = queryset_list.filter(bedrooms__lte=bedrooms)
-#
-#   # Price
-#   if 'price' in request.GET:
-#     price = request.GET['price']
-#     if price:
-#       queryset_list = queryset_list.filter(price__lte=price)
-#
-#   context = {
-#     'state_choices': state_choices,
-#     'bedroom_choices': bedroom_choices,
-#     'price_choices': price_choices,
-#     'listings': queryset_list,
-#     'values': request.GET
-#   }
-
-  # return render(request, 'search.html', context)
-
-def postproperty(request):
-    form = PropertyForm()
-    if request.method == 'POST':
-        form = PropertyForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-    return render(request,'properties/properties.html', {'form':form})
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.profile = self.request.user
+        self.object.save()
+        return super(postproperty, self).form_valid(form)
+    # if request.method == 'POST':
+    #     form = PropertyForm(request.POST, request.FILES)
+    #     if form.is_valid():
+    #         form.save()
+    # return render(request,'properties/properties.html', {'form':form})
 # Create your views here.
+
+
+
+def enquiries(request):
+    return render(request, 'properties/enquiries.html')
