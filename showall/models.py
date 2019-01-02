@@ -28,4 +28,14 @@ class Showall(models.Model):
   def __str__(self):
     return self.title
 
+
+
+class Enquiry(models.Model):
+    property = models.ForeignKey(Showall, blank=True, null=True, on_delete=models.CASCADE)
+    from_email = models.CharField(default=1, max_length=100)
+    message = models.TextField()
+    seller = models.BooleanField(default = False)
+
+    def __str__(self):
+        return self.from_email
 # Create your models here.

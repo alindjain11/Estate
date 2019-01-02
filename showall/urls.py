@@ -7,7 +7,7 @@ urlpatterns = [
     path('', listings, name='listings'),
     path('<int:id>', listing, name='listing'),
     path('postproperty/', login_required(postproperty.as_view()), name='postproperty'),
-    path('enquiries/', enquiries,  name='enquiries', ),
+    path('enquiries/<int:seller>/<int:', enquiry.as_view(),  name='enquiries', ),
     # path('postproperty/', postproperty , name='postproperty'),
 
 ]

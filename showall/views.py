@@ -2,8 +2,8 @@ from django.shortcuts import render
 
 from django.shortcuts import get_object_or_404, render
 from .models import Showall
-from .forms import PropertyForm
-from django.views.generic import CreateView,UpdateView
+from .forms import *
+from django.views.generic import CreateView,UpdateView, FormView
 from django.views.generic.edit import ModelFormMixin
 from .decorators import user_authenticate
 from django.utils.decorators import method_decorator
@@ -51,6 +51,40 @@ class postproperty(CreateView):
 # Create your views here.
 
 
+class enquiry(FormView):
+    template_name = 'Enquiry_form.html'
+    form_class = EnquiryForm
+    success_url = '/thanks/'
 
-def enquiries(request):
-    return render(request, 'properties/enquiries.html')
+
+    def form_valid(self,form):
+        self.object = form.save(commit=False)
+        propertyId = self.kwargs['propertyId']
+        self.object.property = Property.objects.get(id= propertyId)
+        self.object.save()
+        user_email = form.cleaned_data['from_email']
+        message = form.cleaned_data['message']
+        dealer = form.cleaned_data['dealer']
+        sellerId = self.kwargs['sellerId']
+        sellerUser = UserModel.objects.get(id = sellerId)
+        email_html = get_template('email.html')
+        cntxt = {
+        'seller': sellerUser,
+        'property': self.object.property,
+        'dealer' : dealer,
+        'message' : message,
+        'user_email':user_email,
+        }
+        from_email = 'smartersmart69@gmail.com'
+        to_email= [sellerUser.email]
+        message = render_to_string('email.html',cntxt)
+        subject = 'Enquiry about your property from {0}'.format(from_email)
+        send_mail = EmailMessage(
+            subject,
+            message,
+            from_email = from_email,
+            to = to_email,
+        )
+        send_mail.content_subtype = 'html'
+        send_mail.send(fail_silently=False)
+        return super().form_valid(form)
