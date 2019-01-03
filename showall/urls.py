@@ -9,5 +9,5 @@ urlpatterns = [
     path('postproperty/', login_required(postproperty.as_view()), name='postproperty'),
     path('enquiries/<int:seller>/<int:', enquiry.as_view(),  name='enquiries', ),
     # path('postproperty/', postproperty , name='postproperty'),
-
+#no change today
 ]
